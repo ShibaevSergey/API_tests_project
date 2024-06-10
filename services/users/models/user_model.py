@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import Dict
 
 
 class UserData(BaseModel):
@@ -12,3 +11,16 @@ class UserData(BaseModel):
 
 class UserModel(BaseModel):
     data: UserData
+
+
+class UserCreate(BaseModel):
+    name: str
+    job: str
+    id: str
+    createdAt: str
+
+
+class UserUpdateModel(BaseModel):
+    name: str
+    job: str
+    updatedAt: str

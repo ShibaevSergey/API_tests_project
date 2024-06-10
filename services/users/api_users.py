@@ -7,7 +7,7 @@ from config.headers import Headers
 from services.users.payloads import Payloads
 from services.users.endpoints import Endpoints
 from services.users.models.users_model import UsersModel
-from services.users.models.user_model import UserModel
+from services.users.models.user_model import UserModel, UserCreate, UserUpdateModel
 from utils.errors import Errors
 
 
@@ -17,6 +17,24 @@ class UsersAPI(Helper):
         self.payloads = Payloads()
         self.endpoints = Endpoints()
         self.headers = Headers()
+
+    @allure.step('Get list users id')
+    def get_id_list(self) -> []:
+        id_list = []
+        response = requests.get(
+            url=self.endpoints.USERS_ON_PAGE,
+        )
+        assert response.status_code == 200, Errors.STATUS_CODE_IS_NOT_200_ERROR
+        model = UsersModel(**response.json())
+        total = model.total
+        response_all_users = requests.get(
+            url=f'{self.endpoints.USERS}?per_page={total}'
+        )
+        assert response_all_users.status_code == 200, Errors.STATUS_CODE_IS_NOT_200_ERROR
+        model_users = UsersModel(**response_all_users.json())
+        for data in model_users.data:
+            id_list.append(data.id)
+        return id_list
 
     @allure.step('Get a list users from a specific page')
     def get_users_from_page(self, page_number: int):
@@ -47,17 +65,12 @@ class UsersAPI(Helper):
         for user in users.data:
             assert check_email(email_pattern, user.email) is True, Errors.EMAIL_NOT_ENDS_REQRES_IN_ERROR
 
-    @allure.step('Get user by id')
+    @allure.step('Get user by random id')
     def get_random_user_by_id(self):
-        users_response = requests.get(
-            url=f'{self.endpoints.USERS}',
-        )
-        users_model = UsersModel(**users_response.json())
-
-        total_count_users = users_model.total
-        random_user = random.randint(1, total_count_users)
+        list_id = self.get_id_list()
+        random_user_id = random.sample(list_id, 1)[0]
         response = requests.get(
-            url=f'{self.endpoints.USERS}/{random_user}',
+            url=f'{self.endpoints.USERS}/{random_user_id}',
         )
         self.attach_response(response.json())
         assert response.status_code == 200, Errors.STATUS_CODE_IS_NOT_200_ERROR
@@ -76,3 +89,51 @@ class UsersAPI(Helper):
         )
         assert response.status_code == 404, Errors.STATUS_CODE_IS_NOT_404_ERROR
 
+    @allure.step('Create user')
+    def create_user(self):
+        response = requests.post(
+            url=self.endpoints.USERS,
+            json=self.payloads.user,
+        )
+        assert response.status_code == 201, Errors.STATUS_CODE_IS_NOT_201_ERROR
+        model = UserCreate(**response.json())
+        assert model.name == self.payloads.user['name'], Errors.NAME_USER_ERROR
+        assert model.job == self.payloads.user['job'], Errors.JOB_USER_ERROR
+        return model
+
+    @allure.step('Update user from put request')
+    def update_from_put_random_user(self):
+        list_id = self.get_id_list()
+        random_user_id = random.sample(list_id, 1)[0]
+        response = requests.put(
+            url=f'{self.endpoints.USERS}/{random_user_id}',
+            json=self.payloads.user
+        )
+        assert response.status_code == 200, Errors.STATUS_CODE_IS_NOT_200_ERROR
+        model = UserUpdateModel(**response.json())
+        assert model.name == self.payloads.user['name'], Errors.NAME_USER_ERROR
+        assert model.job == self.payloads.user['job'], Errors.JOB_USER_ERROR
+        return model
+
+    @allure.step('Update user from patch request')
+    def update_from_patch_random_user(self):
+        list_id = self.get_id_list()
+        random_user_id = random.sample(list_id, 1)[0]
+        response = requests.patch(
+            url=f'{self.endpoints.USERS}/{random_user_id}',
+            json=self.payloads.user
+        )
+        assert response.status_code == 200, Errors.STATUS_CODE_IS_NOT_200_ERROR
+        model = UserUpdateModel(**response.json())
+        assert model.name == self.payloads.user['name'], Errors.NAME_USER_ERROR
+        assert model.job == self.payloads.user['job'], Errors.JOB_USER_ERROR
+        return model
+
+    @allure.step('Delete random user')
+    def delete_random_user(self):
+        list_id = self.get_id_list()
+        random_user_id = random.sample(list_id, 1)[0]
+        response = requests.delete(
+            url=f'{self.endpoints.USERS}/{random_user_id}'
+        )
+        assert response.status_code == 204, Errors.STATUS_CODE_IS_NOT_204_ERROR

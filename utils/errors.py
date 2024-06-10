@@ -1,5 +1,10 @@
 class Errors:
     STATUS_CODE_IS_NOT_200_ERROR = 'Status code is not 200'
+    STATUS_CODE_IS_NOT_201_ERROR = 'Status code is not 201'
+    STATUS_CODE_IS_NOT_204_ERROR = 'Status code is not 204'
+    STATUS_CODE_IS_NOT_400_ERROR = 'Status code is not 400'
     STATUS_CODE_IS_NOT_404_ERROR = 'Status code is not 404'
     AVATAR_NOT_CONTAINS_ID_ERROR = 'Avatar not contain id'
     EMAIL_NOT_ENDS_REQRES_IN_ERROR = 'Email not ends @reqres.in'
+    NAME_USER_ERROR = 'Name user does not match expected'
+    JOB_USER_ERROR = 'Job user does not match expected'
