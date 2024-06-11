@@ -21,6 +21,7 @@ class LoginAPI(Helper):
             url=self.endpoints.LOGIN,
             json=self.payloads.successful_login,
         )
+        self.attach_response(response.json())
         assert response.status_code == 200, Errors.STATUS_CODE_IS_NOT_200_ERROR
         model = SuccessfulLoginModel(**response.json())
         return model
@@ -31,6 +32,7 @@ class LoginAPI(Helper):
             url=self.endpoints.LOGIN,
             json=self.payloads.unsuccessful_login,
         )
+        self.attach_response(response.json())
         assert response.status_code == 400, Errors.STATUS_CODE_IS_NOT_400_ERROR
         model = UnsuccessfulLoginModel(**response.json())
         return model

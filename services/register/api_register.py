@@ -21,6 +21,7 @@ class RegisterAPI(Helper):
             url=self.endpoints.REGISTER,
             json=self.payloads.successful_registration,
         )
+        self.attach_response(response.json())
         assert response.status_code == 200, Errors.STATUS_CODE_IS_NOT_200_ERROR
         model = SuccessfulRegistrationModel(**response.json())
         return model
@@ -31,6 +32,7 @@ class RegisterAPI(Helper):
             url=self.endpoints.REGISTER,
             json=self.payloads.unsuccessful_registration,
         )
+        self.attach_response(response.json())
         assert response.status_code == 400, Errors.STATUS_CODE_IS_NOT_400_ERROR
         model = UnsuccessfulRegistrationModel(**response.json())
         return model

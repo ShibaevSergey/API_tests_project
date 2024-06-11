@@ -87,6 +87,7 @@ class UsersAPI(Helper):
         response = requests.get(
             url=f'{self.endpoints.USERS}/{total_count_users + 1}'
         )
+        self.attach_response(response.json())
         assert response.status_code == 404, Errors.STATUS_CODE_IS_NOT_404_ERROR
 
     @allure.step('Create user')
@@ -95,6 +96,7 @@ class UsersAPI(Helper):
             url=self.endpoints.USERS,
             json=self.payloads.user,
         )
+        self.attach_response(response.json())
         assert response.status_code == 201, Errors.STATUS_CODE_IS_NOT_201_ERROR
         model = UserCreate(**response.json())
         assert model.name == self.payloads.user['name'], Errors.NAME_USER_ERROR
@@ -109,6 +111,7 @@ class UsersAPI(Helper):
             url=f'{self.endpoints.USERS}/{random_user_id}',
             json=self.payloads.user
         )
+        self.attach_response(response.json())
         assert response.status_code == 200, Errors.STATUS_CODE_IS_NOT_200_ERROR
         model = UserUpdateModel(**response.json())
         assert model.name == self.payloads.user['name'], Errors.NAME_USER_ERROR
@@ -123,6 +126,7 @@ class UsersAPI(Helper):
             url=f'{self.endpoints.USERS}/{random_user_id}',
             json=self.payloads.user
         )
+        self.attach_response(response.json())
         assert response.status_code == 200, Errors.STATUS_CODE_IS_NOT_200_ERROR
         model = UserUpdateModel(**response.json())
         assert model.name == self.payloads.user['name'], Errors.NAME_USER_ERROR
@@ -136,6 +140,7 @@ class UsersAPI(Helper):
         response = requests.delete(
             url=f'{self.endpoints.USERS}/{random_user_id}'
         )
+        self.attach_response(response.json())
         assert response.status_code == 204, Errors.STATUS_CODE_IS_NOT_204_ERROR
 
     @allure.step('Get users with delay')
@@ -144,4 +149,5 @@ class UsersAPI(Helper):
             url=self.endpoints.DELAY,
             timeout=4,
         )
+        self.attach_response(response.json())
         assert response.status_code == 200, Errors.STATUS_CODE_IS_NOT_200_ERROR

@@ -44,6 +44,7 @@ class ResourceAPI(Helper):
         response = requests.get(
             url=f'{self.endpoints.RESOURCE}/{random_id[0]}'
         )
+        self.attach_response(response.json())
         assert response.status_code == 200, Errors.STATUS_CODE_IS_NOT_200_ERROR
         model = ResourceModel(**response.json())
         return model
@@ -58,4 +59,5 @@ class ResourceAPI(Helper):
         response = requests.get(
             url=f'{self.endpoints.RESOURCE}/{total_count_resources + 1}'
         )
+        self.attach_response(response.json())
         assert response.status_code == 404, Errors.STATUS_CODE_IS_NOT_404_ERROR
