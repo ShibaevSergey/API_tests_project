@@ -140,7 +140,6 @@ class UsersAPI(Helper):
         response = requests.delete(
             url=f'{self.endpoints.USERS}/{random_user_id}'
         )
-        self.attach_response(response.json())
         assert response.status_code == 204, Errors.STATUS_CODE_IS_NOT_204_ERROR
 
     @allure.step('Get users with delay')
