@@ -1,6 +1,5 @@
 import allure
 import requests
-
 from services.register.models.register_model import SuccessfulRegistrationModel, UnsuccessfulRegistrationModel
 from utils.errors import Errors
 from utils.helper import Helper

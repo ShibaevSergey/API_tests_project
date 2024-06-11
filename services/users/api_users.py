@@ -137,3 +137,11 @@ class UsersAPI(Helper):
             url=f'{self.endpoints.USERS}/{random_user_id}'
         )
         assert response.status_code == 204, Errors.STATUS_CODE_IS_NOT_204_ERROR
+
+    @allure.step('Get users with delay')
+    def get_users_with_delay(self):
+        response = requests.get(
+            url=self.endpoints.DELAY,
+            timeout=4,
+        )
+        assert response.status_code == 200, Errors.STATUS_CODE_IS_NOT_200_ERROR

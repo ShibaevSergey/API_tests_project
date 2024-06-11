@@ -15,7 +15,7 @@ class TestUsers(BaseTest):
         self.api_users.expect_404_status_code_for_user_not_found()
 
     def test_create_user(self):
-        self.api_users.user()
+        self.api_users.create_user()
 
     def test_update_from_put_user(self):
         self.api_users.update_from_put_random_user()
@@ -25,3 +25,6 @@ class TestUsers(BaseTest):
 
     def test_delete_user(self):
         self.api_users.delete_random_user()
+
+    def test_delay_request(self):
+        self.api_users.get_users_with_delay()
