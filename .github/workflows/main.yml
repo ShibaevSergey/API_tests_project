@@ -44,5 +44,5 @@ jobs:
         if: always()
         with:
           GITHUB_TOKEN: ${{ secrets.API_TOKEN }}
-          PUBLISH_BRANCH: gh_pages
+          PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
